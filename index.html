@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Praja Doot – Interactive Mobile UI</title>
+<style>
+:root{--bg1:#667eea;--bg2:#764ba2;--surface:#fff;--card:#f5f5f5;--text:#222;--muted:#777;--line:#e0e0e0;--accent:#667eea;--ok:#d4edda;--okt:#155724;--warn:#fff3cd;--warnt:#856404;--bad:#f8d7da;--badt:#721c24;--info:#e3f2fd;--infot:#1565c0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--surface:#1c1c26;--card:#262634;--text:#eee;--muted:#a0a0b0;--line:#3a3a4a;--ok:#1d3a28;--okt:#9be0b0;--warn:#3d3416;--warnt:#f0d27a;--bad:#442226;--badt:#f1a5ab;--info:#1b2d44;--infot:#8cc4f5}}
+:root[data-theme="dark"]{--surface:#1c1c26;--card:#262634;--text:#eee;--muted:#a0a0b0;--line:#3a3a4a;--ok:#1d3a28;--okt:#9be0b0;--warn:#3d3416;--warnt:#f0d27a;--bad:#442226;--badt:#f1a5ab;--info:#1b2d44;--infot:#8cc4f5}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));background-attachment:fixed;color:var(--text);display:flex;flex-direction:column;align-items:center;padding:24px 12px}
+h1{color:#fff;text-align:center;font-size:2em}
+.sub{color:#fff;opacity:.9;text-align:center;margin:6px 0 20px}
+.phone{width:100%;max-width:380px;height:760px;max-height:calc(100vh - 140px);min-height:620px;background:#000;border-radius:48px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.screen{position:relative;height:100%;background:var(--surface);border-radius:38px;overflow:hidden;display:flex;flex-direction:column}
+.status{height:44px;flex:none;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#fff;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:.85em;font-weight:600}
+.view{flex:1;overflow-y:auto;padding:18px}
+.scr{display:none}.scr.on{display:block}
+.title{font-size:1.35em;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.back{border:0;background:none;color:var(--accent);font-size:1em;font-weight:600;cursor:pointer;margin-bottom:10px}
+.card{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px;border-left:4px solid var(--accent)}
+.card.ok{background:var(--ok);border-left-color:#4caf50;color:var(--okt)}
+.card.warn{background:var(--warn);border-left-color:#ff9800;color:var(--warnt)}
+.card.bad{background:var(--bad);border-left-color:#f44336;color:var(--badt)}
+.ct{font-weight:600;margin-bottom:4px;font-size:.95em}.tx{font-size:.85em;line-height:1.4}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.lbl{font-size:.8em;color:var(--muted);margin-bottom:6px}
+.big{font-size:1.8em;font-weight:700;color:var(--accent)}
+.info{background:var(--info);color:var(--infot);border-left:4px solid #2196f3;border-radius:8px;padding:12px;font-size:.85em;line-height:1.5;margin-bottom:14px}
+.sec{font-size:.8em;font-weight:700;color:var(--muted);margin:14px 0 8px;letter-spacing:.04em}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:9px;font-size:.88em}
+.row b{font-weight:600}.row span{color:var(--muted)}
+.sw{position:relative;width:45px;height:24px;flex:none}.sw input{opacity:0;width:0;height:0}
+.sl{position:absolute;inset:0;background:#bbb;border-radius:24px;cursor:pointer;transition:.3s}
+.sl:before{content:"";position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+input:checked+.sl{background:var(--accent)}input:checked+.sl:before{transform:translateX(21px)}
+.btn{width:100%;padding:12px;border:0;border-radius:8px;font-size:.95em;font-weight:600;cursor:pointer;margin-top:10px;color:var(--text);background:var(--card);border:1px solid var(--line)}
+.btn.p{background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#fff;border:0}
+.btn.d{background:#f44336;color:#fff;border:0}
+.btn:active{transform:scale(.98)}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.75em;font-weight:600;margin-top:8px;background:var(--surface)}
+.tl{border-left:2px solid var(--line);margin-left:6px}
+.ti{position:relative;padding:0 0 14px 16px;font-size:.85em;cursor:default}
+.ti:before{content:"";position:absolute;left:-7px;top:2px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--surface)}
+.ti.link{cursor:pointer}.ti small{display:block;color:var(--muted);font-size:.85em;margin-bottom:2px}
+.ro{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:.85em}
+.ro b{color:var(--accent)}
+.fld{border:1px solid var(--line);border-radius:8px;padding:11px;margin-bottom:12px;font-size:.9em}
+.nav{flex:none;display:flex;border-top:1px solid var(--line);background:var(--surface);padding-bottom:6px}
+.nav button{flex:1;border:0;background:none;padding:9px 0;color:var(--muted);font-size:.75em;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav button i{font-style:normal;font-size:1.5em}
+.nav button.on{color:var(--accent);font-weight:600}
+.toast{position:absolute;left:50%;bottom:78px;transform:translate(-50%,20px);background:#222;color:#fff;padding:9px 16px;border-radius:20px;font-size:.85em;opacity:0;pointer-events:none;transition:.3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<h1>🛡️ Praja Doot</h1>
+<p class="sub">Interactive mockup · Citizen protection against surveillance pricing</p>
+
+<div class="phone"><div class="screen">
+<div class="status"><span>9:41</span><span>⚡</span></div>
+<div class="view" id="view">
+
+<section class="scr on" id="home" data-tab="home">
+  <div class="title">🏠 Home</div>
+  <div class="card ok"><div class="ct">✓ Protected</div><div class="tx">Your pricing preferences are active</div></div>
+  <div class="box"><div class="lbl">This week</div><div class="big">3</div><div class="tx">Surveillance attempts blocked</div></div>
+  <div class="box"><div class="lbl">Earnings</div><div class="big" style="color:#4caf50">₹485</div><div class="tx">Compensation received</div></div>
+  <button class="btn p" data-go="history">Review Activity</button>
+  <button class="btn" data-go="consent">1 pending consent request</button>
+</section>
+
+<section class="scr" id="rules" data-tab="rules">
+  <div class="title">⚙️ My Rules</div>
+  <div class="info">Define what kind of pricing treatment you expect from sellers.</div>
+  <div class="sec">BANNED PRICING</div>
+  <div class="row"><b>Location-based pricing</b><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
+  <div class="row"><b>Device-based pricing</b><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
+  <div class="row"><b>Browsing-history pricing</b><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
+  <div class="sec">ALLOWED PRICING</div>
+  <div class="card ok"><div class="tx">✓ Time-based pricing (off-peak discounts)</div></div>
+  <div class="card ok"><div class="tx">✓ Volume-based pricing (bulk discounts)</div></div>
+  <button class="btn p" data-toast="Rules saved ✓">Save Rules</button>
+  <button class="btn" data-go="registry">Business declarations →</button>
+</section>
+
+<section class="scr" id="registry" data-tab="rules">
+  <button class="back" data-back>‹ Back</button>
+  <div class="title">🏢 Business Declarations</div>
+  <div class="info">Sellers declare their pricing method before offering you deals.</div>
+  <div class="card ok"><div class="ct">📱 Amazon India</div><div class="tx"><b>Method:</b> Volume-based discounts<br><b>Verified:</b> June 2026</div><span class="badge">✓ Compliant</span></div>
+  <div class="card ok"><div class="ct">🛫 MakeMyTrip</div><div class="tx"><b>Method:</b> Time-based pricing<br><b>Verified:</b> September 2026</div><span class="badge">✓ Compliant</span></div>
+  <div class="card warn"><div class="ct">🛍️ ShoppyShop</div><div class="tx"><b>Method:</b> Not declared<br><b>Status:</b> Under review</div><span class="badge">⏳ Pending</span></div>
+</section>
+
+<section class="scr" id="consent" data-tab="rules">
+  <button class="back" data-back>‹ Back</button>
+  <div class="title">✋ Consent Request</div>
+  <div class="card warn"><div class="ct">🤝 Flipkart requests permission</div><div class="tx">to show location-based pricing for shipping optimization</div></div>
+  <div class="box">
+    <div class="ro"><span>Purpose</span><b>Shipping optimization</b></div>
+    <div class="ro"><span>Data type</span><b>Location</b></div>
+    <div class="ro"><span>Duration</span><b>1 year</b></div>
+    <div class="ro" style="border:0"><span>Price impact</span><b>Possible 5–10%</b></div>
+  </div>
+  <button class="btn p" data-toast="Permission granted ✓" data-go="home">Grant Permission</button>
+  <button class="btn d" data-toast="Permission denied" data-go="home">Deny</button>
+</section>
+
+<section class="scr" id="history" data-tab="history">
+  <div class="title">📜 Activity Ledger</div>
+  <div class="info">Your complete history of pricing protection events. Tap the blocked offer for details.</div>
+  <div class="sec">TODAY</div>
+  <div class="tl">
+    <div class="ti link" data-go="blocked"><small>10:30 AM</small><b>🚫 Offer blocked</b> — Flipkart (location-based) ›</div>
+    <div class="ti"><small>9:15 AM</small><b>✓ Compliant offer</b> — Amazon (volume discount)</div>
+  </div>
+  <div class="sec">YESTERDAY</div>
+  <div class="tl">
+    <div class="ti"><small>5:45 PM</small><b>💰 Settlement</b> — Received ₹200 from Flipkart</div>
+    <div class="ti"><small>2:20 PM</small><b>⚠️ Violation report</b> — Filed against OYO</div>
+  </div>
+</section>
+
+<section class="scr" id="blocked" data-tab="history">
+  <button class="back" data-back>‹ Back</button>
+  <div class="title">🚫 Offer Blocked</div>
+  <div class="card bad"><div class="ct">⚠️ Surveillance pricing detected</div><div class="tx">Flipkart tried to show you a different price based on your location.</div></div>
+  <div class="box">
+    <div class="ro"><span>Violation</span><b>Location-based</b></div>
+    <div class="ro"><span>Product</span><b>Nike shoes</b></div>
+    <div class="ro"><span>Your rule</span><b>Ban location</b></div>
+    <div class="ro"><span>Offered price</span><b>₹8,499</b></div>
+    <div class="ro" style="border:0"><span>Standard price</span><b>₹7,999</b></div>
+  </div>
+  <button class="btn p" data-go="report">File Complaint</button>
+  <button class="btn" data-go="rules">View My Rules</button>
+</section>
+
+<section class="scr" id="report" data-tab="history">
+  <button class="back" data-back>‹ Back</button>
+  <div class="title">⚠️ Report Violation</div>
+  <div class="info">File a formal complaint with Praja Doot for enforcement.</div>
+  <div class="lbl">Business</div><div class="fld">Flipkart</div>
+  <div class="lbl">Violation type</div><div class="fld">Location-based pricing</div>
+  <div class="lbl">Product</div><div class="fld">Nike Air Max Running Shoes</div>
+  <div class="lbl">Price difference</div><div class="fld">₹500 (₹8,499 vs ₹7,999)</div>
+  <button class="btn p" data-toast="Report submitted ✓" data-go="history">Submit Report</button>
+  <button class="btn" data-back>Cancel</button>
+</section>
+
+<section class="scr" id="account" data-tab="account">
+  <div class="title">👤 Account</div>
+  <div style="text-align:center;padding:6px 0 16px;border-bottom:1px solid var(--line);margin-bottom:10px">
+    <div style="width:60px;height:60px;border-radius:50%;margin:0 auto 10px;background:linear-gradient(135deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;font-size:1.7em">👤</div>
+    <div style="font-weight:600">Raj Kumar</div><div class="lbl">raj.kumar@email.com</div>
+  </div>
+  <div class="sec">SETTINGS</div>
+  <div class="row"><b>Email notifications</b><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
+  <div class="row"><b>Push notifications</b><label class="sw"><input type="checkbox" checked><span class="sl"></span></label></div>
+  <div class="sec">SUPPORT</div>
+  <button class="btn" data-toast="Opening privacy policy…">View Privacy Policy</button>
+  <button class="btn" data-toast="Contacting support…">Contact Support</button>
+  <button class="btn d" data-toast="Logged out">Logout</button>
+</section>
+
+</div>
+<nav class="nav" id="nav">
+  <button data-go="home" data-t="home" class="on"><i>🏠</i>Home</button>
+  <button data-go="rules" data-t="rules"><i>⚙️</i>Rules</button>
+  <button data-go="history" data-t="history"><i>📊</i>History</button>
+  <button data-go="account" data-t="account"><i>👤</i>Account</button>
+</nav>
+<div class="toast" id="toast"></div>
+</div></div>
+
+<script>
+var stack = [], cur = "home", tt;
+function show(id){
+  var s = document.getElementById(id); if(!s) return;
+  document.querySelectorAll(".scr").forEach(function(x){x.classList.toggle("on", x===s)});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.toggle("on", b.dataset.t===s.dataset.tab)});
+  document.getElementById("view").scrollTop = 0;
+  cur = id;
+}
+function go(id){
+  var isTab = document.querySelector('#nav [data-go="'+id+'"]');
+  if(isTab) stack = []; else stack.push(cur);
+  show(id);
+}
+function toast(m){
+  var t = document.getElementById("toast"); t.textContent = m; t.classList.add("show");
+  clearTimeout(tt); tt = setTimeout(function(){t.classList.remove("show")}, 1800);
+}
+document.addEventListener("click", function(e){
+  var m = e.target.closest("[data-toast]"); if(m) toast(m.dataset.toast);
+  var g = e.target.closest("[data-go]");
+  if(g){ go(g.dataset.go); return; }
+  if(e.target.closest("[data-back]")){ show(stack.pop() || "home"); }
+});
+</script>
+</body>
+</html>
